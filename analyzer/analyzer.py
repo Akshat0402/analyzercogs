@@ -105,7 +105,7 @@ class Analyzer(commands.Cog):
             pass
         try:
             self.driver.find_element_by_id('allow').click()
-        except:
+        except NoSuchElementException:
             pass
         except Exception as e:
             await self.logchannel.send(e)
