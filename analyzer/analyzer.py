@@ -103,12 +103,9 @@ class Analyzer(commands.Cog):
           time.sleep(3)
         except NoSuchElementException as e:
             pass
-        try:
-            self.driver.find_element_by_id('allow').click()
-        except NoSuchElementException:
-            pass
         except Exception as e:
             await self.logchannel.send(e)
+        
 
     async def login_again(self):
         try:
@@ -313,11 +310,15 @@ class Analyzer(commands.Cog):
              counter = counter+1
 
         if len(self.all_decks) == 0:
-            self.driver.get_screenshot_as_file('noDATA.png')
-            await self.logchannel.send(file=discord.File('noDATA.png'))
-            embed = discord.Embed()
-            embed.add_field(name='\u200b', value=f"Sorry, analyzer couldn't fetch data for this user.\n[Click Here]({self.driver.current_url}) to be redirected to player profile.")
-            return await ctx.send(embed=embed)
+            try:
+                self.driver.find_element_by_id('allow').click()
+                await self.getData(ctx, self.driver.current_url)
+            except:
+             self.driver.get_screenshot_as_file('noDATA.png')
+             await self.logchannel.send(file=discord.File('noDATA.png'))
+             embed = discord.Embed()
+             embed.add_field(name='\u200b', value=f"Sorry, analyzer couldn't fetch data for this user.\n[Click Here]({self.driver.current_url}) to be redirected to player profile.")
+             return await ctx.send(embed=embed)
             # try:
             #     await self.login(url = self.driver.current_url)
             #     await self.getData(ctx,self.driver.current_url)
